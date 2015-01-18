@@ -20,9 +20,9 @@ public class Book {
 
     public void print() {
         System.out.printf("%s - %s by ", title, subtitle);
-        for (int i=0; i<authors.length; i++) {
+        for (int i = 0; i < authors.length; i++) {
             System.out.printf("%s", authors[i]);
-            if (i<authors.length-1)
+            if (i < authors.length - 1)
                 System.out.print(", ");
             else
                 System.out.print(" ");

@@ -31,19 +31,17 @@ public class ISBN {
     public static void validate() {
         if (len == 10) {
             validateISBN_10();
-        }
-        else if (len == 13)
+        } else if (len == 13)
             validateISBN_13();
         else
             System.out.println("Not 10 or 13 digits long.");
     }
 
     public static String format(String isbn) {
-         if (isbn.length() == 10) {
-             isbn = String.format("%s-%s-%s-%s", isbn.substring(0, 1), isbn.substring(1,3), isbn.substring(3,9), isbn.substring(9,10));
-         }
-        else if (isbn.length() == 13) {
-             isbn = String.format("%s-%s-%s-%s-%s", isbn.substring(0,3), isbn.substring(3,4), isbn.substring(4,6), isbn.substring(6,12), isbn.substring(12, 13));
+        if (isbn.length() == 10) {
+            isbn = String.format("%s-%s-%s-%s", isbn.substring(0, 1), isbn.substring(1, 3), isbn.substring(3, 9), isbn.substring(9, 10));
+        } else if (isbn.length() == 13) {
+            isbn = String.format("%s-%s-%s-%s-%s", isbn.substring(0, 3), isbn.substring(3, 4), isbn.substring(4, 6), isbn.substring(6, 12), isbn.substring(12, 13));
         }
         return isbn;
     }
@@ -70,13 +68,13 @@ public class ISBN {
     public static void validateISBN_13() {
         int multiplier = 1;
         int total = 0;
-        for (int i=0; i<ISBN.length() - 1; i++)  {
+        for (int i = 0; i < ISBN.length() - 1; i++) {
             char c = ISBN.charAt(i);
             total += multiplier * Character.getNumericValue(c);
             multiplier = multiplier == 3 ? 1 : 3;
         }
-        int checkDigit = 10-(total%10);
-        int finalDigit = Character.getNumericValue(ISBN.charAt(ISBN.length()-1));
+        int checkDigit = 10 - (total % 10);
+        int finalDigit = Character.getNumericValue(ISBN.charAt(ISBN.length() - 1));
         if (checkDigit == finalDigit)
             valid = true;
         else
