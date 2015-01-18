@@ -5,9 +5,7 @@
         public static void main(String[] args) {
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter ISBN-10: ");
-            //String strISBN = scanner.nextLine();
-            String strISBN = "0596510047";
-           // strISBN = "0123456789";
+            String strISBN = scanner.nextLine();
             strISBN = strISBN.replaceAll("[^0-9]+", ""); //strip all non-digits
 
             ISBN isbn = new ISBN(strISBN);
