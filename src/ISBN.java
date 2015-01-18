@@ -3,9 +3,9 @@ public class ISBN {
     private static int len;
     private static boolean valid = false;
 
-    public ISBN(String ISBN, int len) {
+    public ISBN(String ISBN) {
         this.ISBN = ISBN;
-        this.len = len;
+        this.len = ISBN.length();
         validate();
     }
 
@@ -17,13 +17,13 @@ public class ISBN {
         return this.len;
     }
 
-    public void setISBN(String ISBN, int len) {
-        this.ISBN = ISBN;
-        this.len = len;
-    }
-
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
+        this.len = ISBN.length();
+    }
+
+    public String getISBN() {
+        return this.ISBN;
     }
 
     public static void validate() {
@@ -32,21 +32,23 @@ public class ISBN {
         }
         else if (len == 13)
             System.out.println("NYI");
+        else
+            System.out.println("Not 10 or 13 digits long.");
     }
 
     public static void validateISBN_10() {
         int multiplier = 10;
         int total = 0;
+
         for (char c : ISBN.toCharArray()) {
-            if (Character.isDigit(c)) {
-                total += multiplier * Character.getNumericValue(c);
-                multiplier--;
-                if (multiplier < 0) {
-                    valid = false;
-                    break;
-                }
+            total += multiplier * Character.getNumericValue(c);
+            multiplier--;
+            if (multiplier < 0) {
+                valid = false;
+                break;
             }
         }
+
         if (total % 11 == 0)
             valid = true;
         else
