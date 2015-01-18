@@ -40,19 +40,13 @@
         }
 
         public void parseAPIResult(String strResponse) {
+
+
             JSONObject obj =new JSONObject(strResponse);
             JSONArray arr = obj.getJSONArray("items");
             int index = 0;
 
             JSONObject volumeInfo = arr.getJSONObject(index).getJSONObject("volumeInfo");
-            String title = volumeInfo.getString("title");
-            String subTitle = volumeInfo.getString("subtitle");
-
-            JSONArray arrAuthors = volumeInfo.getJSONArray("authors");
-            String authors[] = new String[arrAuthors.length()];
-            for (int i=0; i<arrAuthors.length(); i++) {
-                authors[i] = arrAuthors.getString(i);
-            }
 
             JSONArray identifiers = volumeInfo.getJSONArray("industryIdentifiers");
             JSONObject ISBN13;
@@ -67,28 +61,32 @@
                 ISBN13 = identifiers.getJSONObject(1);
             }
 
-            String strISBN10 = ISBN10.getString("identifier");
-            String strISBN13 = ISBN13.getString("identifier");
+            String strISBN10 = ISBN.format(ISBN10.getString("identifier"));
+            String strISBN13 = ISBN.format(ISBN13.getString("identifier"));
 
             if (queryType.equals("ISBN")) { //if the query is by ISBN, then make sure the ISBNs match
-                if ((isbn.getLen() == 10 && ISBN10.get("identifier").equals(isbn.getISBN())) || (isbn.getLen() == 13 && ISBN13.get("identifier").equals(isbn.getISBN())))
-                    printAPIResult(title, subTitle, authors, strISBN10, strISBN13);
-                else
+                if (!(isbn.getLen() == 10 && ISBN10.get("identifier").equals(isbn.getISBN())) || (isbn.getLen() == 13 && ISBN13.get("identifier").equals(isbn.getISBN()))) {
                     System.out.println("No match found.");
+                    return;
+                }
             }
-        }
 
-        public static void printAPIResult(String title, String subTitle, String authors[], String ISBN10, String ISBN13) {
-            System.out.printf("%s - %s by ", title, subTitle);
-            for (int i=0; i<authors.length; i++) {
-                System.out.printf("%s", authors[i]);
-                if (i<authors.length-1)
-                    System.out.print(", ");
-                else
-                    System.out.print(" ");
+            //if expanded in the future, the code could be rearranged, but since right now it's ISBN only, I pull the ISBN first and compare to make sure I should continue.
+            //If the ISBNs don't match, then just end (return) now.
+
+            String title = volumeInfo.getString("title");
+            String subtitle = volumeInfo.getString("subtitle");
+
+            JSONArray arrAuthors = volumeInfo.getJSONArray("authors");
+            String authors[] = new String[arrAuthors.length()];
+            for (int i=0; i<arrAuthors.length(); i++) {
+                authors[i] = arrAuthors.getString(i);
             }
-            System.out.println();
-            System.out.printf("ISBN-10: %s\n", ISBN10);
-            System.out.printf("ISBN-13: %s\n", ISBN13);
+
+            String description = volumeInfo.getString("description");
+            int pageCount = volumeInfo.getInt("pageCount");
+            double rating = volumeInfo.getDouble("averageRating");
+            Book book = new Book(authors, title, subtitle, description, strISBN10, strISBN13, pageCount, rating);
+            book.print();
         }
     }
